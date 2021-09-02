@@ -71,7 +71,10 @@ const List = ({ completed, todos, selected, setSelected, setAsking, asking, setN
                                     <div className = "menu-container">
                                         <small>
                                             { Math.floor((new Date(Date.now()) - new Date(todo.date)) / 1000 / 60 / 60) }시간&nbsp;
-                                            { Math.floor((new Date(Date.now()) - new Date(todo.date)) / 1000 / 60) }분 전에 추가&nbsp;
+                                            { Math.floor((new Date(Date.now()) - new Date(todo.date)) / 1000 / 60) > 60 
+                                                ? 0 
+                                                : Math.floor((new Date(Date.now()) - new Date(todo.date)) / 1000 / 60) }
+                                                분 전에 추가&nbsp;
                                         </small>
                                         <span>
                                             <button name = "complete" disabled = { todo.complete ? true : false } onClick = { handleAsking}>완료</button>

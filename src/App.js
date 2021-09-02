@@ -38,7 +38,6 @@ function App() {
         if(todo.complete === true){
             num = num + 1;
             setCompleted(num);
-            console.log(todo)
         }
     })
     if(todos.length === 0){
@@ -69,7 +68,6 @@ function App() {
   useEffect(() => {
       if(needRefresh){
         getTodos();
-        console.log(completed)
       }
   })
 
