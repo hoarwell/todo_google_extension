@@ -12,11 +12,11 @@ function App() {
   const [time, setTime] = useState("");
   const [text, setText] = useState("");
   const [todos, setTodos] = useState("");
-  const [added, setAdded] = useState("");
   const [selected, setSelected] = useState("");
   const [weather, setWeather] = useState("");
+  const [air, setAir] = useState("");
   const [asking, setAsking] = useState(false);
-  const [count, setCount] = useState(0);
+  const [completed, setCompleted] = useState(0);
   const [needRefresh, setNeedRefresh] = useState(false);
 
   const API_KEY = "9a0073a226700978e96bb74160fd450a";
@@ -31,19 +31,32 @@ function App() {
           setNeedRefresh(false);
       });
   }
-  let num = 1;
+
+  let num = 0;
   const countComplete = (todos) => {
     todos.forEach((todo) => {
         if(todo.complete === true){
-            setCount(num++);
+            num = num + 1;
+            setCompleted(num);
+            console.log(todo)
         }
     })
+    if(todos.length === 0){
+      setCompleted(0);
+    }
   }
 
   const getWeather = () => {
-    axios.get(`http://ip-api.com/json`)
+    axios.get(`https://geolocation-db.com/json/`)
       .then((res) => {
-        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${res.data.city}&appid=${API_KEY}`)
+        axios.get(`http://api.openweathermap.org/data/2.5/air_pollution?lat=${res.data.latitude}&lon=${res.data.longitude}&appid=${API_KEY}`)
+          .then((res)=> {
+            setAir(res.data.list[0].main.aqi)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${res.data.state}&appid=${API_KEY}&lang=kr`)
           .then((res) => {
             setWeather(res.data);
           })
@@ -56,6 +69,7 @@ function App() {
   useEffect(() => {
       if(needRefresh){
         getTodos();
+        console.log(completed)
       }
   })
 
@@ -67,9 +81,9 @@ function App() {
   return (
     <div className="App">
         <Clock time = { time } setTime = { setTime } />
-        <Weather weather = { weather } />
-        <Form text = { text } setText = { setText } todos = { todos } setTodos = { setTodos } setAdded = { setAdded } setNeedRefresh = { setNeedRefresh } />
-        <List count = { count } todos = { todos } selected = { selected } setSelected = { setSelected } asking = { asking } setAsking = { setAsking } setNeedRefresh = { setNeedRefresh } />
+        <Weather weather = { weather } air = { air } />
+        <Form text = { text } setText = { setText } todos = { todos } setTodos = { setTodos } setNeedRefresh = { setNeedRefresh } />
+        <List completed = { completed } todos = { todos } selected = { selected } setSelected = { setSelected } asking = { asking } setAsking = { setAsking } setNeedRefresh = { setNeedRefresh } />
         <Footer />
     </div>
   );

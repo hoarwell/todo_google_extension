@@ -1,12 +1,16 @@
 import { dbService } from 'fbase';
 import React, { useState, useRef, useEffect } from 'react';
 
-const List = ({ count, todos, selected, setSelected, setAsking, asking, setNeedRefresh }) => {
+const List = ({ completed, todos, selected, setSelected, setAsking, asking, setNeedRefresh }) => {
     const listRef = useRef();
 
     const handleClick = (e) => {
         const { dataset } = e.currentTarget;
-        setSelected(dataset.id);
+        if(selected !== "" && e.target.localName === "p"){
+            setSelected("")
+        } else {
+            setSelected(dataset.id);
+        }
     }
 
     const handleDelete = () => {
@@ -26,6 +30,7 @@ const List = ({ count, todos, selected, setSelected, setAsking, asking, setNeedR
         .then(() => {
             console.log(selected, 'updated successfully');
             setSelected("");
+            setAsking("");
             setNeedRefresh(true);
         })
         .catch((error) => {
@@ -44,7 +49,6 @@ const List = ({ count, todos, selected, setSelected, setAsking, asking, setNeedR
     const handleCancelAsking = (e) => {
         e.preventDefault();
         setAsking(false);
-        setSelected(null)
         console.log(e)
     }
     
@@ -72,7 +76,6 @@ const List = ({ count, todos, selected, setSelected, setAsking, asking, setNeedR
                                         <span>
                                             <button name = "complete" disabled = { todo.complete ? true : false } onClick = { handleAsking}>완료</button>
                                             <button name = "delete" onClick = { handleAsking }>삭제</button>
-                                            <button name = "cancel" onClick = { handleCancelAsking }>접기</button>
                                         </span>
                                     </div>
                                     : ""
@@ -80,7 +83,7 @@ const List = ({ count, todos, selected, setSelected, setAsking, asking, setNeedR
                             </li>
                         )) : ""
                 }
-                <p><small>총 { todos.length }개, 완료 { count }개, 남은 할 일 { todos.length - count }개</small></p>
+                <p><small>총 { todos.length }개, 완료 { completed }개, 남은 할 일 { todos.length - completed < 0 ? 0 : todos.length - completed }개</small></p>
             </ul>
         </div>
     );

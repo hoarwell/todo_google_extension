@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { dbService } from 'fbase';
 
-const Form = ({ text, setText, todos, setTodos, setAdded, setNeedRefresh }) => {
+const Form = ({ text, setText, todos, setTodos, setNeedRefresh }) => {
     const ref = dbService.collection('todos').doc();
     const inputRef = useRef();
 
@@ -19,7 +19,6 @@ const Form = ({ text, setText, todos, setTodos, setAdded, setNeedRefresh }) => {
         }
         dbService.collection("todos").doc(ref.id).set(object)
         .then(() => {
-            setAdded(true);
             setNeedRefresh(true);
         })
         .catch((error) => {
