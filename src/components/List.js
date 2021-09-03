@@ -6,7 +6,8 @@ const List = ({ completed, todos, selected, setSelected, setAsking, asking, setN
 
     const handleClick = (e) => {
         const { dataset } = e.currentTarget;
-        if(selected !== "" && e.target.localName === "p"){
+        const { localName } = e.target;
+        if(selected !== "" && (localName === "p" || localName === "small")){
             setSelected("")
         } else {
             setSelected(dataset.id);
